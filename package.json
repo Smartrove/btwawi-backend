@@ -5,15 +5,8 @@
   "main": "build/app",
   "types": "build/app",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon --config nodemon.json src/app.ts",
-    "serverPm2": "sudo pm2 start npm --name live -- run start -- --port 8086 -i 0",
-    "client:dev": "npm run dev --prefix client",
-    "client:start": "npm run start --prefix client",
-    "dev": "concurrently \"npm run client:dev\" \"npm run server\"",
-    "start:both": "concurrently \"npm run client:start\" \"npm run serverPm2\"",
-    "server:start": "node src/app.ts",
-    "build": "tsc && npm run",
+    "server:start": "ts-node src/app.ts",
+    "build": "tsc && npm run cp package.json",
     "start": "node build/app.js",
     "copy-package-json": "cp package.json build/"
   },

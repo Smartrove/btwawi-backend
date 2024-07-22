@@ -21,6 +21,8 @@ const dev = process.env.NODE_ENV !== "production";
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3025",
+  "http://localhost:5173",
+  "https://btwawi-3-0.vercel.app",
   "http://localhost:3040",
   "http://120.0.0.1:3025",
   "https://hizbasvarietystore.com.ng",
