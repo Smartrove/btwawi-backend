@@ -6,9 +6,8 @@
   "types": "build/app",
   "scripts": {
     "server:start": "ts-node src/app.ts",
-    "build": "tsc && npm run cp package.json",
-    "start": "node build/app.js",
-    "copy-package-json": "cp package.json build/"
+    "build": "tsc && npm run",
+    "start": "node build/app.js"
   },
   "keywords": [],
   "author": "",
