@@ -30,7 +30,7 @@ export interface VendorUserDocument extends mongoose.Document {
   website?: string;
   socialMedia?: string;
   attendanceRole: string;
-  experienceOfPastSeminar: string;
+  experienceOfPastSeminar?: string;
   businessCategory: string[];
   servicesDescription: string;
   otherRequirements: string;
