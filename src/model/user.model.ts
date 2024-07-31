@@ -33,7 +33,7 @@ export interface VendorUserDocument extends mongoose.Document {
   experienceOfPastSeminar?: string;
   businessCategory: string[];
   servicesDescription: string;
-  otherRequirements: string;
+  otherRequirements?: string;
   agreement: string;
   edition: string;
   createdAt: Date;
@@ -126,11 +126,6 @@ const vendorUserSchema = new mongoose.Schema(
       required: false,
       default: "lagos",
       enum: EDITION_TYPE,
-    },
-    phoneNum: {
-      type: String,
-      required: true,
-      unique: true,
     },
     edition: {
       type: String,
