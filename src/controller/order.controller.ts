@@ -60,7 +60,7 @@ export const verifyPayment = async (req: Request, res: Response) => {
     });
 
     if (!transaction) {
-      log.info("<<< transaction creation failed, aborting transaction....>>> ");
+      log.info("<<< transaction creation failed, aborting transaction...>>> ");
 
       await session.abortTransaction();
       session.endSession();

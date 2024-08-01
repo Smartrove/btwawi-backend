@@ -3,7 +3,7 @@ import { EDITION_TYPE } from "../utils/Constants";
 
 export interface TransactionDocument extends mongoose.Document {
   fullName: string;
-  description: string;
+  description?: string;
   total: string;
   paymentVerified: boolean;
   editionPaidFor: string;
