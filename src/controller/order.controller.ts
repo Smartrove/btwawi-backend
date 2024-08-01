@@ -21,7 +21,8 @@ export const verifyPayment = async (req: Request, res: Response) => {
   try {
     const userId = get(req, "user.fullName");
     const body = get(req, "body");
-    const { total, referenceId, description, editionPaidFor, fullName } = body;
+    const { total, referenceId, description, editionPaidFor, fullName, email } =
+      body;
 
     let config = {
       headers: {
@@ -57,6 +58,7 @@ export const verifyPayment = async (req: Request, res: Response) => {
       total,
       paymentVerified: true,
       editionPaidFor,
+      email,
     });
 
     if (!transaction) {
