@@ -14,73 +14,95 @@ import {
 
 import { createTransaction } from "../service/transaction/transaction.services";
 
+const secretKey = process.env.PAYSTAACK_SECRET_KEY;
+console.log(secretKey);
+
 export const verifyPayment = async (req: Request, res: Response) => {
   const session = await AttendeeUser.startSession();
   session.startTransaction();
 
   try {
-    const userId = get(req, "user.fullName");
     const body = get(req, "body");
     const { total, referenceId, editionPaidFor, fullName, email } = body;
 
-    let config = {
+    const config = {
       headers: {
-        Authorization: `Bearer ${process.env.PAYSTAACK_SECRET_KEY}`,
+        Authorization: `Bearer ${secretKey}`,
       },
     };
 
     log.info("calling verify endpoint....");
-    const response = await axios.get(
-      `https://api.paystack.co/transaction/verify/${referenceId}`,
-      config
-    );
+    try {
+      const response = await axios.get(
+        `https://api.paystack.co/transaction/verify/${referenceId}`,
+        config
+      );
 
-    if (response.status !== 200) {
-      log.info("verification failed, aborting transaction....");
+      log.info("response status: " + response.status);
+      log.info("response data: " + JSON.stringify(response.data));
+
+      if (response.status !== 200) {
+        log.info("verification failed, aborting transaction....");
+
+        await session.abortTransaction();
+        session.endSession();
+
+        return res.status(response.status).json({
+          message: "Payment verification failed",
+        });
+      }
+
+      log.info(
+        " <<< verification successful, creating new order transaction.... >>> "
+      );
+
+      //create new transaction
+      const transaction = await createTransaction({
+        fullName,
+        total,
+        paymentVerified: true,
+        editionPaidFor,
+        email,
+      });
+
+      log.info(transaction);
+
+      if (!transaction) {
+        log.info(
+          "<<< transaction creation failed, aborting transaction...>>> "
+        );
+
+        await session.abortTransaction();
+        session.endSession();
+
+        return res.status(500).json({
+          message: "Ops something went wrong. Please try again later!!",
+        });
+      }
+      //create new order
 
       await session.abortTransaction();
       session.endSession();
 
-      return res.status(response.status).json({
+      log.info("returning success response....");
+
+      return res.status(200).json({
+        status: 200,
+        message: "Payment verified successfully",
+        data: { transaction },
+      });
+    } catch (err: any) {
+      log.error(
+        "Error in Paystack verification: ",
+        err.response?.data || err.message
+      );
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(err.response?.status || 500).json({
         message: "Payment verification failed",
+        error: err.response?.data || err.message,
       });
     }
-
-    log.info(
-      " <<< verification successful, creating new order transaction.... >>> "
-    );
-
-    //create new transaction
-    const transaction = await createTransaction({
-      fullName,
-      total,
-      paymentVerified: true,
-      editionPaidFor,
-      email,
-    });
-
-    if (!transaction) {
-      log.info("<<< transaction creation failed, aborting transaction...>>> ");
-
-      await session.abortTransaction();
-      session.endSession();
-
-      return res.status(500).json({
-        message: "Ops something went wrong. Please try again later!!",
-      });
-    }
-    //create new order
-
-    await session.abortTransaction();
-    session.endSession();
-
-    log.info("returning success response....");
-
-    return res.status(200).json({
-      status: 200,
-      message: "Payment verified successfully",
-      data: { transaction },
-    });
   } catch (error) {
     log.error(error as Error);
     return res.status(500).json({

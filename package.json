@@ -17,6 +17,7 @@
     "@types/helmet": "^4.0.0",
     "@types/yup": "^0.32.0",
     "aws-sdk": "^2.1465.0",
+    "axios": "^1.7.3",
     "bcrypt": "^5.1.0",
     "cloudinary": "^1.41.0",
     "concurrently": "^8.2.0",
