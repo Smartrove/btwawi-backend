@@ -26,6 +26,7 @@ const allowedOrigins = [
   "http://localhost:3040",
   "http://120.0.0.1:3025",
   "https://hizbasvarietystore.com.ng",
+  "https://btwawi.com",
 ];
 var corsOptions = {
   origin: function (origin: any, callback: any) {
