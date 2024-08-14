@@ -117,14 +117,14 @@ export const getOrders = async (req: Request, res: Response) => {
   try {
     let userId = get(req, "user._id");
     const body = get(req, "body");
-    const user = get(req, "user");
+    const { user, userId: _id } = body;
     const startDate = get(req, "params.startDate");
     const endDate = get(req, "params.endDate");
     let orders;
 
-    if (user.role == "admin") {
-      userId = req.params.userId ? req.params.userId : userId;
-    }
+    // if (user?.role == "admin") {
+    //   userId = req?.params?.userId ? req?.params?.userId : userId;
+    // }
 
     if (startDate) {
       orders = await findOrders({
@@ -154,7 +154,7 @@ export const getAdminOrders = async (req: Request, res: Response) => {
   try {
     let userId = req.params.userId ? req.params.userId : "";
     const body = get(req, "body");
-    const user = get(req, "user");
+    const { user } = body;
     const startDate = get(req, "params.startDate");
     const endDate = get(req, "params.endDate");
     let orders;
@@ -193,12 +193,12 @@ export const getAllOrders = async (req: Request, res: Response) => {
   try {
     let userId = req.params.userId ? req.params.userId : "";
     const body = get(req, "body");
-    const user = get(req, "user");
+    const { user } = body;
     const startDate = get(req, "params.startDate");
     const endDate = get(req, "params.endDate");
     let orders;
 
-    if (user.role !== "admin") {
+    if (user?.role !== "admin") {
       return res.status(401).json({
         status: 401,
         message:
@@ -253,7 +253,8 @@ export const updateOrderHandler = async (req: Request, res: Response) => {
   try {
     const userId = get(req, "user._id");
     const orderId = get(req, "params.id");
-    const user = get(req, "user");
+    const body = get(req, "body");
+    const { user } = body;
     const status = get(req, "body.status");
     let order;
     if (user.role !== "admin") {
