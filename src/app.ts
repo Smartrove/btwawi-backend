@@ -27,6 +27,9 @@ const allowedOrigins = [
   "http://120.0.0.1:3025",
   "https://hizbasvarietystore.com.ng",
   "https://btwawi.com",
+  "http://btwawi.com",
+  "https://www.btwawi.com",
+  "http://www.btwawi.com",
 ];
 var corsOptions = {
   origin: function (origin: any, callback: any) {
