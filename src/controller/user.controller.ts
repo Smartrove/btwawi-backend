@@ -13,6 +13,7 @@ import log from "../logger";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import nodeMailer from "nodemailer";
+import { ServerClient } from "postmark";
 
 let transporter = nodeMailer.createTransport({
   host: "smtp.zoho.com",
@@ -58,11 +59,48 @@ export const createAttendeeLagosUserHandler = async (
       }
     }
 
+    const data = {
+      html: `
+      <h2>Thank You for registering for Business The Way Allaah Wants It</h2>
+      <p>Your details has been collected. We look forward to seeing you in the event.</p>
+      <div>
+        <p>Best Regards,<br/>BTWAWI Team</p>
+      </div>
+        `,
+    };
+
+    const AdminData = {
+      html: `
+      <h2>${userEmail} just registered for Business The Way Allaah Wants It</h2>
+      <p>The details has been collected. We look forward to seeing him/her in the event.</p>
+      <div>
+        <p>Best Regards,<br/>BTWAWI Team</p>
+      </div>
+        `,
+    };
+
     let newUser = req.body;
     newUser.editionChecked = "lagos";
 
     console.log("newUser", newUser);
     const user = await createUser(req.body);
+
+    // Send an email:
+    const client = new ServerClient(process.env.EMAIL_SECRET_KEY as string);
+    const msg = await client.sendEmailWithTemplate({
+      From: `${process.env.EMAIL_DOMAIN}`,
+      To: userEmail,
+      TemplateAlias: "BTWAWI-Registration",
+      TemplateModel: data,
+    });
+
+    const adminMsg = await client.sendEmailWithTemplate({
+      From: `${process.env.EMAIL_DOMAIN}`,
+      To: `${process.env.EMAIL_ADMIN}`,
+      TemplateAlias: "BTWAWI-Registration-Admin",
+      TemplateModel: AdminData,
+    });
+
     return res.send(omit(user.toJSON(), "password"));
   } catch (error) {
     const newError = error as any;
@@ -108,6 +146,43 @@ export const createAttendeeAbujaUserHandler = async (
     newUser.editionChecked = "abuja";
 
     console.log("newUser", newUser);
+
+    const data = {
+      html: `
+      <h2>Thank You for registering for Business The Way Allaah Wants It</h2>
+      <p>Your details has been collected. We look forward to seeing you in the event.</p>
+      <div>
+        <p>Best Regards,<br/>BTWAWI Team</p>
+      </div>
+        `,
+    };
+
+    const AdminData = {
+      html: `
+      <h2>${userEmail} just registered for Business The Way Allaah Wants It</h2>
+      <p>The details has been collected successfully. We look forward to seeing him/her in the event.</p>
+      <div>
+        <p>Best Regards,<br/>BTWAWI Team</p>
+      </div>
+        `,
+    };
+
+    // Send an email:
+    const client = new ServerClient(process.env.EMAIL_SECRET_KEY as string);
+    const msg = await client.sendEmailWithTemplate({
+      From: `${process.env.EMAIL_DOMAIN}`,
+      To: userEmail,
+      TemplateAlias: "BTWAWI-Registration",
+      TemplateModel: data,
+    });
+
+    const adminMsg = await client.sendEmailWithTemplate({
+      From: `${process.env.EMAIL_DOMAIN}`,
+      To: `${process.env.EMAIL_ADMIN}`,
+      TemplateAlias: "BTWAWI-Registration-Admin",
+      TemplateModel: AdminData,
+    });
+
     const user = await createUser(req.body);
     return res.send(omit(user.toJSON(), "password"));
   } catch (error) {
@@ -138,6 +213,41 @@ export const createVendorLagosUserHandler = async (
     newUser.editionChecked = "lagos";
 
     console.log("newUser", newUser);
+
+    const data = {
+      html: `
+      <h2>Thank You for registering for Business The Way Allaah Wants It</h2>
+      <p>Your details has been collected. We look forward to seeing you in the event.</p>
+      <div>
+        <p>Best Regards,<br/>BTWAWI Team</p>
+      </div>
+        `,
+    };
+    const AdminData = {
+      html: `
+      <h2>${userEmail} just registered for Business The Way Allaah Wants It</h2>
+      <p>The details has been collected successfully. We look forward to seeing him/her in the event.</p>
+      <div>
+        <p>Best Regards,<br/>BTWAWI Team</p>
+      </div>
+        `,
+    };
+
+    // Send an email:
+    const client = new ServerClient(process.env.EMAIL_SECRET_KEY as string);
+    const msg = await client.sendEmailWithTemplate({
+      From: `${process.env.EMAIL_DOMAIN}`,
+      To: userEmail,
+      TemplateAlias: "BTWAWI-Registration",
+      TemplateModel: data,
+    });
+    const adminMsg = await client.sendEmailWithTemplate({
+      From: `${process.env.EMAIL_DOMAIN}`,
+      To: `${process.env.EMAIL_ADMIN}`,
+      TemplateAlias: "BTWAWI-Registration-Admin",
+      TemplateModel: AdminData,
+    });
+
     const user = await createVendorUser(req.body);
     return res.send(user.toJSON());
   } catch (error) {
@@ -168,6 +278,43 @@ export const createVendorAbujaUserHandler = async (
 
     console.log("newUser", newUser);
     const user = await createVendorUser(req.body);
+
+    const data = {
+      html: `
+      <h2>Thank You for registering for Business The Way Allaah Wants It</h2>
+      <p>Your details has been collected. We look forward to seeing you in the event.</p>
+      <div>
+        <p>Best Regards,<br/>BTWAWI Team</p>
+      </div>
+        `,
+    };
+
+    const AdminData = {
+      html: `
+      <h2>${userEmail} just registered for Business The Way Allaah Wants It</h2>
+      <p>The details has been collected. We look forward to seeing him/her in the event.</p>
+      <div>
+        <p>Best Regards,<br/>BTWAWI Team</p>
+      </div>
+        `,
+    };
+
+    // Send an email:
+    const client = new ServerClient(process.env.EMAIL_SECRET_KEY as string);
+    const msg = await client.sendEmailWithTemplate({
+      From: `${process.env.EMAIL_DOMAIN}`,
+      To: userEmail,
+      TemplateAlias: "BTWAWI-Registration",
+      TemplateModel: data,
+    });
+
+    const adminMsg = await client.sendEmailWithTemplate({
+      From: `${process.env.EMAIL_DOMAIN}`,
+      To: `${process.env.EMAIL_ADMIN}`,
+      TemplateAlias: "BTWAWI-Registration-Admin",
+      TemplateModel: AdminData,
+    });
+
     return res.send(user.toJSON());
   } catch (error) {
     const newError = error as any;
