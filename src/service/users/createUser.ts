@@ -51,6 +51,12 @@ export const findUser = async (
 ) => {
   return await AttendeeUser.findOne(query, options).lean();
 };
+export const findUserWithRole = async (
+  query: FilterQuery<UserWithRoleDocument>,
+  options: QueryOptions = {}
+) => {
+  return await AttendeeUser.findOne(query, options).lean();
+};
 
 export const findVendorUser = async (
   query: FilterQuery<VendorUserDocument>,

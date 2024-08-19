@@ -7,6 +7,7 @@ import {
   findAndUpdateVendor,
   findUser,
   findUsers,
+  findUserWithRole,
   findVendorUser,
 } from "../service/users/createUser";
 import { omit, get } from "lodash";
@@ -28,7 +29,7 @@ let transporter = nodeMailer.createTransport({
 
 export const createUserHandler = async (req: Request, res: Response) => {
   try {
-    const userExist = await findUser({ email: req.body.email }, {});
+    const userExist = await findUserWithRole({ email: req.body.email }, {});
 
     if (userExist) {
       return res.status(403).json({
