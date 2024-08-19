@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   createUser,
+  createUserWithRole,
   createVendorUser,
   findAndUpdate,
   findAndUpdateVendor,
@@ -24,6 +25,29 @@ let transporter = nodeMailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 });
+
+export const createUserHandler = async (req: Request, res: Response) => {
+  try {
+    const userExist = await findUser({ email: req.body.email }, {});
+
+    if (userExist) {
+      return res.status(403).json({
+        status: 403,
+        message: " User with same email already exists",
+      });
+    }
+
+    let newUser = req.body;
+
+    const user = await createUserWithRole(newUser);
+
+    return res.send(omit(user.toJSON(), "password"));
+  } catch (error) {
+    const newError = error as any;
+    log.error(newError);
+    res.status(409).send(newError.message);
+  }
+};
 
 export const createAttendeeLagosUserHandler = async (
   req: Request,
@@ -560,164 +584,3 @@ export const deleteUserHandler = async (req: Request, res: Response) => {
     });
   }
 };
-
-// export const addAddressHandler = async (req: Request, res: Response) => {
-//   try {
-//     const userEmail = get(req, "user.email");
-//     const body = get(req, "body");
-//     const { address, city, state, country } = body
-//     const userExist = await findUser({ email: userEmail }, {});
-
-//     if (!userExist) {
-//       return res.status(403).json({
-//         status: 403,
-//         message: " User does not exists",
-//       });
-//     }
-
-//     const { addresses } = userExist
-
-//     if(addresses.length >= 3 ){
-//       return res.status(403).json({
-//         status: 403,
-//         message: "You have reached the limit of 3 addresses delete one to add another"
-//       })
-//     }
-
-//     let newAddress = {
-//       city,
-//       address,
-//       country,
-//       state,
-//     }
-
-//     const updateUser = await findAndUpdate({ email: userEmail }, { $push: { "addresses": newAddress }}, { new: true})
-
-//     return res.status(200).json({
-//       address: newAddress,
-//       message: `Address added successfully`,
-//     })
-//   } catch (error) {
-//     const newError = error as any;
-//     log.error(newError);
-//     res.status(409).send(newError.message);
-//   }
-// };
-
-// export const updateAddressHandler = async (req: Request, res: Response) => {
-//   try {
-//     const userEmail = get(req, "user.email");
-//     const body = get(req, "body");
-//     const {
-//       address,
-//       city,
-//       state,
-//       //@ts-ignore
-//       isDefault,
-//       addressId,
-//       country } = body;
-//     const userExist = await findUser({ email: userEmail }, {});
-
-//     if (!userExist) {
-//       return res.status(403).json({
-//         status: 403,
-//         message: " User does not exists",
-//       });
-//     }
-
-//     const { addresses } = userExist
-//     console.log(typeof addresses)
-
-//     if(addresses && addresses.length >= 0 ){
-//       // @ts-ignore
-//       const currentArress = addresses?.filter(address => String(address._id) === String(addressId));
-
-//       if(currentArress.length < 1) return res.status(402).json({
-//           message: `No address with the current adrressId ${addressId}`,
-//         })
-
-//       currentArress[0].city = city;
-//       currentArress[0].state = state;
-//       currentArress[0].address = address;
-//       currentArress[0].country = country;
-//       currentArress[0].default = isDefault ? isDefault : false;
-
-//       const updateUser = await findAndUpdate({ email: userEmail }, { $set: { "addresses": addresses }}, { new: true })
-
-//       return res.status(200).json({
-//         address: updateUser?.addresses,
-//         message: `Address added successfully`,
-//       })
-
-//     }
-
-//        let newAddress = {
-//          city,
-//          address,
-//          country,
-//          state,
-//          default: isDefault ? isDefault : false
-//        }
-
-//        const updateUser = await findAndUpdate({ email: userEmail }, { $set: { "addresses": [ newAddress ] }}, { new: true })
-
-//        return res.status(200).json({
-//          address: updateUser?.addresses,
-//          message: `Address added successfully`,
-//        })
-
-//   } catch (error) {
-//     const newError = error as any;
-//     log.error(newError);
-//     res.status(409).send(newError.message);
-//   }
-// };
-
-// export const deleteAddressHandler = async (req: Request, res: Response) => {
-//   try {
-//     const userEmail = get(req, "user.email");
-//     const addressId = get(req, "params.id");
-
-//     const userExist = await findUser({ email: userEmail }, {});
-
-//     if (!userExist) {
-//       return res.status(403).json({
-//         status: 403,
-//         message: " User does not exists",
-//       });
-//     }
-
-//     const updateUser = await findAndUpdate({ email: userEmail }, { $pull: { "addresses": { _id: addressId } }}, { new: true})
-
-//     return res.status(200).json({
-//       message: `Address deleted successfully`,
-//     })
-//   } catch (error) {
-//     const newError = error as any;
-//     log.error(newError);
-//     res.status(409).send(newError.message);
-//   }
-// };
-
-// export const getUserddressHandler = async (req: Request, res: Response) => {
-//   try {
-//     const userEmail = get(req, "user.email");
-//     const userExist = await findUser({ email: userEmail }, {});
-
-//     if (!userExist) {
-//       return res.status(403).json({
-//         status: 403,
-//         message: " User does not exists",
-//       });
-//     }
-
-//     return res.status(200).json({
-//       message: `Address fetched successfully`,
-//       addresses: userExist.addresses
-//     })
-//   } catch (error) {
-//     const newError = error as any;
-//     log.error(newError);
-//     res.status(409).send(newError.message);
-//   }
-// };

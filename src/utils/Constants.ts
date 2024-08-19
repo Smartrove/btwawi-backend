@@ -1,4 +1,4 @@
-export const USER_TYPE = ["seller", "buyer", "admin"];
+export const USER_TYPE = ["attendee", "vendor", "admin"];
 export const EDITION_TYPE = ["abuja", "lagos"];
 export const USER_STATUS = ["Active", "In-Active", "Not-Confirmed"];
 

@@ -7,11 +7,18 @@ import {
 import {
   AttendeeUser,
   AttendeeUserDocument,
+  User,
+  UserWithRoleDocument,
   VendorUser,
   VendorUserDocument,
 } from "../../model/user.model";
 import { omit } from "lodash";
 
+export const createUserWithRole = async (
+  input: DocumentDefinition<UserWithRoleDocument>
+) => {
+  return await User.create(input);
+};
 export const createUser = async (
   input: DocumentDefinition<AttendeeUserDocument>
 ) => {

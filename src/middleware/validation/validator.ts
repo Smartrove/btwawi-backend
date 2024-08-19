@@ -1,6 +1,14 @@
 import { body, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 
+export const userValidationRules = () => {
+  return [
+    //validation email
+    body("email").isEmail(),
+    body("role").not().isEmpty(),
+    body("password").isLength({ min: 8 }),
+  ];
+};
 export const attendeeUserValidationRules = () => {
   return [
     body("phoneNum").not().isEmpty(),

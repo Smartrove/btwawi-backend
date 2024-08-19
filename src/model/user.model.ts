@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { EDITION_TYPE } from "../utils/Constants";
+import bcrypt from "bcrypt";
+import { EDITION_TYPE, USER_TYPE } from "../utils/Constants";
 
 export interface AttendeeUserDocument extends mongoose.Document {
   fullName: string;
@@ -20,6 +21,14 @@ export interface AttendeeUserDocument extends mongoose.Document {
   editionChecked: string;
   createdAt: Date;
   updatedAt: Date;
+}
+export interface UserWithRoleDocument extends mongoose.Document {
+  email: string;
+  password: string;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
+  comparePassword(candidatePasswords: string): Promise<boolean>;
 }
 
 export interface VendorUserDocument extends mongoose.Document {
@@ -113,6 +122,25 @@ const attendeeUserSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+const UserWithRoleSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: USER_TYPE,
+    },
+  },
+  { timestamps: true }
+);
 
 const vendorUserSchema = new mongoose.Schema(
   {
@@ -185,4 +213,38 @@ const AttendeeUser = mongoose.model<AttendeeUserDocument>(
   attendeeUserSchema
 );
 
-export { VendorUser, AttendeeUser };
+const User = mongoose.model<UserWithRoleDocument>(
+  "userWithRole",
+  UserWithRoleSchema
+);
+
+UserWithRoleSchema.pre("save", async function (next) {
+  let user = this as unknown as UserWithRoleDocument;
+
+  //only hash the password if it has been modified or new
+  if (!user.isModified("password")) return next();
+
+  //get salt
+  const salt = await bcrypt.genSalt(
+    parseInt(process.env.saltWorkFactor as any)
+  );
+  // const salt = await bcrypt.genSalt(config.get("saltWorkFactor"));
+
+  const hash = await bcrypt.hashSync(user.password, salt);
+
+  // Replace the password with the hash
+  user.password = hash;
+
+  return next();
+});
+
+//Used for logging in users
+UserWithRoleSchema.methods.comparePassword = async function (
+  candidatePasswords: string
+) {
+  const user = this as UserWithRoleDocument;
+
+  return bcrypt.compare(candidatePasswords, user.password).catch((e) => false);
+};
+
+export { VendorUser, AttendeeUser, User };
