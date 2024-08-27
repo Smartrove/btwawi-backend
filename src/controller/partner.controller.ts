@@ -8,6 +8,7 @@ export const createPartnerHandler = async (req: Request, res: Response) => {
   try {
     const userExist = await findPartner({ email: req.body.email }, {});
     const userEmail = get(req, "body.email");
+    const company_name = get(req, "body.companyName");
 
     if (userExist) {
       return res.status(403).json({
@@ -34,8 +35,10 @@ export const createPartnerHandler = async (req: Request, res: Response) => {
     const msg = await client.sendEmailWithTemplate({
       From: `${process.env.EMAIL_DOMAIN}`,
       To: userEmail,
-      TemplateAlias: "BTWAWI-Registration",
-      TemplateModel: data,
+      TemplateAlias: "BTWAWI-Partner-Registration",
+      TemplateModel: {
+        company_name: `${company_name}`,
+      },
     });
 
     return res.send({
