@@ -9,6 +9,17 @@ export const userValidationRules = () => {
     body("password").isLength({ min: 8 }),
   ];
 };
+export const partnerValidationRules = () => {
+  return [
+    //validation email
+    body("email").isEmail(),
+    body("contactPerson").not().isEmpty(),
+    body("companyName").not().isEmpty(),
+    body("businessNature").not().isEmpty(),
+    body("partnerLevel").not().isEmpty(),
+    body("phoneNum").not().isEmpty(),
+  ];
+};
 export const attendeeUserValidationRules = () => {
   return [
     body("phoneNum").not().isEmpty(),
