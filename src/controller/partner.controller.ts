@@ -41,6 +41,15 @@ export const createPartnerHandler = async (req: Request, res: Response) => {
       },
     });
 
+    const adminMsg = await client.sendEmailWithTemplate({
+      From: `${process.env.EMAIL_DOMAIN}`,
+      To: `${process.env.EMAIL_ADMIN}`,
+      TemplateAlias: "BTWAWI-Registration-Admin",
+      TemplateModel: {
+        userEmail: `${userEmail}`,
+      },
+    });
+
     return res.send({
       status: 200,
       data: user,
