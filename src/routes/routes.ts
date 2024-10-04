@@ -9,6 +9,7 @@ import UserRouter from './users/routes';
 // import CategoryRouter from './category/route';
 import OrderRouter from './order/routes';
 import PartnerRouter from './partner/routes';
+import PostRouter from './post/routes';
 
 const Router = express.Router();
 
@@ -23,6 +24,7 @@ Router.use('/user', UserRouter);
 // Router.use("/store", StoreRouter);
 // Router.use("/wishlist", WishlistRouter);
 Router.use("/order", OrderRouter);
+Router.use("/post", PostRouter);
 Router.use("/partner", PartnerRouter);
 
 export default Router;
