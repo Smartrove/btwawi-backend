@@ -5,6 +5,7 @@
   "main": "build/app",
   "types": "build/app",
   "scripts": {
+    "server": "nodemon --ignore src/app.ts",
     "server:start": "ts-node src/app.ts",
     "build": "tsc && npm run",
     "start": "node build/app.js"

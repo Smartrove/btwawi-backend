@@ -16,6 +16,14 @@ export function findPost(
 ) {
   return Post.findOne(query, {}, options);
 }
+export function findPosts(
+  query: FilterQuery<PostDocument>,
+  options: QueryOptions = { lean: true },
+  limit: number = 10,
+  skip: number = 0
+) {
+  return Post.find(query, {}, options).limit(limit).skip(skip);
+}
 
 export function findAndUpdate(
   query: FilterQuery<PostDocument>,
