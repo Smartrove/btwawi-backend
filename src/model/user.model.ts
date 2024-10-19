@@ -19,6 +19,7 @@ export interface AttendeeUserDocument extends mongoose.Document {
   agreement: string;
   edition: string;
   editionChecked: string;
+  revenue?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -118,6 +119,10 @@ const attendeeUserSchema = new mongoose.Schema(
       required: false,
       default: "lagos",
       enum: EDITION_TYPE,
+    },
+    revenue: {
+      type: String,
+      required: false,
     },
   },
   { timestamps: true }
