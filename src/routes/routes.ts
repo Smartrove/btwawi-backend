@@ -10,6 +10,7 @@ import UserRouter from './users/routes';
 import OrderRouter from './order/routes';
 import PartnerRouter from './partner/routes';
 import PostRouter from './post/routes';
+import VolunteerRouter from './volunteer/routes';
 
 const Router = express.Router();
 
@@ -17,14 +18,9 @@ Router.use('/healthcheck', (req: Request, res: Response) => res.sendStatus(200))
 
 //Routes
 Router.use('/user', UserRouter);
-// Router.use('/post', PostRouter);
-// Router.use("/product", ProductRouter);
-// Router.use("/category", CategoryRouter);
-// Router.use("/cart", CartRouter);
-// Router.use("/store", StoreRouter);
-// Router.use("/wishlist", WishlistRouter);
 Router.use("/order", OrderRouter);
 Router.use("/post", PostRouter);
 Router.use("/partner", PartnerRouter);
+Router.use("/volunteer", VolunteerRouter);
 
 export default Router;
