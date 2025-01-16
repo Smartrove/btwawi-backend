@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { EDITION_TYPE, USER_TYPE } from "../utils/Constants";
 
 export interface RegistrationDocument extends mongoose.Document {
   fullName: string;
