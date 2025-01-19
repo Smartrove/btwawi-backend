@@ -11,6 +11,7 @@ export interface RegistrationDocument extends mongoose.Document {
   hoursPerWeek: string;
   meetingAvailability: string;
   confidentiality: string;
+  suggestions?: string;
   additionalComments?: string;
   createdAt: Date;
   updatedAt: Date;
