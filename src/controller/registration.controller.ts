@@ -65,21 +65,21 @@ export const registerVolunteerHandler = async (req: Request, res: Response) => {
 
     // Send an email:
     const client = new ServerClient(process.env.EMAIL_SECRET_KEY as string);
-    const msg = await client.sendEmailWithTemplate({
-      From: `${process.env.EMAIL_DOMAIN}`,
-      To: userEmail,
-      TemplateAlias: "Volunteer",
-      TemplateModel: data,
-    });
+    // const msg = await client.sendEmailWithTemplate({
+    //   From: `${process.env.EMAIL_DOMAIN}`,
+    //   To: userEmail,
+    //   TemplateAlias: "Volunteer",
+    //   TemplateModel: data,
+    // });
 
-    const adminMsg = await client.sendEmailWithTemplate({
-      From: `${process.env.EMAIL_DOMAIN}`,
-      To: `${process.env.EMAIL_ADMIN}`,
-      TemplateAlias: "Volunteer-Registration-Admin",
-      TemplateModel: {
-        userEmail: `${userEmail}`,
-      },
-    });
+    // const adminMsg = await client.sendEmailWithTemplate({
+    //   From: `${process.env.EMAIL_DOMAIN}`,
+    //   To: `${process.env.EMAIL_ADMIN}`,
+    //   TemplateAlias: "Volunteer-Registration-Admin",
+    //   TemplateModel: {
+    //     userEmail: `${userEmail}`,
+    //   },
+    // });
 
     return res.send(omit(user.toJSON(), "password"));
   } catch (error) {
