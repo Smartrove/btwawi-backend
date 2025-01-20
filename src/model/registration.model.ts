@@ -53,14 +53,6 @@ const registrationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    attendingAs: {
-      type: String,
-      required: true,
-    },
-    howDidYouHear: {
-      type: String,
-      required: true,
-    },
     meetingAvailability: {
       type: String,
       required: true,
